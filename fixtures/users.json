@@ -1,0 +1,12 @@
+[
+    {
+        "scenario": "Standard User",
+        "username": "standard_user",
+        "password": "secret_sauce"
+    },
+    {
+        "scenario": "Problem User",
+        "username": "problem_user",
+        "password": "secret_sauce"
+    }
+]
