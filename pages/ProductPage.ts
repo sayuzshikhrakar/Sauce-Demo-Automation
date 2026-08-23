@@ -1,5 +1,4 @@
 import { Page, Locator, expect } from "@playwright/test";
-import { LoginPage } from "./LoginPage";
 
 export class ProductPage {
     readonly page: Page;
@@ -10,6 +9,8 @@ export class ProductPage {
     readonly removeBtn: Locator;
     readonly logoutBtn: Locator;
     readonly burgerIcon: Locator;
+    readonly productList: Locator;
+    readonly productSorting: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -20,6 +21,8 @@ export class ProductPage {
         this.removeBtn = page.locator('[data-test="remove-sauce-labs-backpack"]');
         this.logoutBtn = page.locator('[data-test="logout-sidebar-link"]');
         this.burgerIcon = page.locator('#react-burger-menu-btn');
+        this.productList = page.locator('[data-test="inventory-item-name"]');
+        this.productSorting = page.locator('[data-test="product-sort-container"]');
     }
 
 
@@ -45,6 +48,23 @@ export class ProductPage {
     async clickLogoutBtn() {
         await this.logoutBtn.click();
         await expect(this.page.getByText("Swag Labs")).toBeVisible();
+    }
+
+    async getProductTitles() {
+        return await this.productList.allTextContents();
+
+    }
+    async sortByProductNameAsc() {
+        await this.productSorting.selectOption('az');
+        return await this.productList.allTextContents();
+
+    }
+
+    async sortByProductnameDesc() {
+        await this.productSorting.selectOption('za');
+        return await this.productList.allTextContents();
+
+
     }
 
 

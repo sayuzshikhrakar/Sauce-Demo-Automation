@@ -4,29 +4,38 @@ import { ProductPage } from '../pages/ProductPage';
 import { CheckoutPageOverview } from '../pages/CheckoutPageOverview';
 import { CheckoutPageYourInformation } from '../pages/CheckoutPageYourInformation';
 import users from '../fixtures/users.json';
+import { sortAlphabeticallyAsc, sortAlphabeticallyDesc } from "../utils/Helpers";
 
 test.describe('SauceDemo Checkout Flow', () => {
+    // Data-driven testing: Iterate through the users fixture to run the checkout flow 
+    // against different user scenarios (e.g., standard_user, problem_user).
     for (const user of users) {
         test(`Standard Checkout (Happy Path) for ${user.scenario}`, async ({ page }) => {
             console.log("running for user: " + user.scenario);
+
+            // Initialize Page Object Models
             const loginPage = new LoginPage(page);
             const productPage = new ProductPage(page);
             const checkoutPageYourInformation = new CheckoutPageYourInformation(page);
             const checkoutPageOverview = new CheckoutPageOverview(page);
 
+            // Step 1: Login
             await loginPage.navigate();
             await loginPage.login(user.username, user.password);
             await loginPage.assertSuccessfulLogin();
 
+            // Step 2: Add product to cart and navigate to checkout
             await productPage.addToCart();
             await productPage.clickShoppingCart();
             await productPage.assertCartPageNavigation();
             await productPage.clickCheckOutBtn();
 
+            // Step 3: Fill in customer information
             await checkoutPageYourInformation.fillYourInformation('Sayuz', 'Shikhrakar', 'NTY21');
             await checkoutPageYourInformation.clickContinue();
             await checkoutPageYourInformation.assertOverviewPageNavigation();
 
+            // Step 4: Complete the order
             await checkoutPageOverview.clickFinish();
             await checkoutPageOverview.assertThankYouPageNavigation();
 
@@ -38,12 +47,15 @@ test.describe('SauceDemo Checkout Flow', () => {
             const loginPage = new LoginPage(page);
             const productPage = new ProductPage(page);
 
+            // Add an item to the cart
             await loginPage.navigate();
             await loginPage.login(user.username, user.password);
             await productPage.addToCart();
 
+            // Refresh the browser page to test state persistence
             await page.reload();
 
+            // Assert that the cart state is retained after refresh
             await expect(productPage.cartCount).toHaveText("1");
             await expect(productPage.removeBtn).toBeVisible();
 
@@ -55,13 +67,50 @@ test.describe('SauceDemo Checkout Flow', () => {
         const loginPage = new LoginPage(page);
         const productPage = new ProductPage(page);
 
-        // Find the specific user from the JSON fixture
+        // Find the specific 'Standard User' from the JSON fixture to use for this test
+        const standardUser = users.find(u => u.scenario === 'Standard User');
+        if (!standardUser) throw new Error("Standard User not found in fixture!");
+
+        // Login as the standard user
+        await loginPage.navigate();
+        await loginPage.login(standardUser.username, standardUser.password);
+
+        // Open the hamburger menu and logout
+        await productPage.clickBurgerIcon();
+        await productPage.clickLogoutBtn();
+    });
+
+    test('Verify the product sorting functionality @building', async ({ page }) => {
+        const loginPage = new LoginPage(page);
+        const productPage = new ProductPage(page);
+
+
+        // Setup: Find standard user and login
         const standardUser = users.find(u => u.scenario === 'Standard User');
         if (!standardUser) throw new Error("Standard User not found in fixture!");
 
         await loginPage.navigate();
         await loginPage.login(standardUser.username, standardUser.password);
-        await productPage.clickBurgerIcon();
-        await productPage.clickLogoutBtn();
-    });
+
+        //get initia product title
+        const initialProductList = await productPage.getProductTitles();
+        // --- Verify Ascending Order ---
+        // 1. Sort products A-Z via the web UI drop-down
+        const productListAsc = await productPage.sortByProductNameAsc();
+
+        // 2. Read the locally cached list, sort it A-Z using JavaScript, and compare against the UI
+        const initialProducToAsc = await sortAlphabeticallyAsc(initialProductList);
+        expect(productListAsc).toEqual(initialProducToAsc);
+
+        // --- Verify Descending Order ---
+        // 1. Sort products Z-A via the web UI drop-down
+        const productListDesc = await productPage.sortByProductnameDesc();
+
+        // 2. Read the locally cached list, sort it Z-A using JavaScript, and compare against the UI
+        const initialProducToDesc = await sortAlphabeticallyDesc(initialProductList);
+        expect(productListDesc).toEqual(initialProducToDesc);
+
+
+
+    })
 });
