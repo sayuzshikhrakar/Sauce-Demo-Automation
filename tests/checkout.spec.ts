@@ -33,6 +33,35 @@ test.describe('SauceDemo Checkout Flow', () => {
 
 
         });
+
+        test(`Cart retains items after page refresh @regression for ${user.scenario}`, async ({ page }) => {
+            const loginPage = new LoginPage(page);
+            const productPage = new ProductPage(page);
+
+            await loginPage.navigate();
+            await loginPage.login(user.username, user.password);
+            await productPage.addToCart();
+
+            await page.reload();
+
+            await expect(productPage.cartCount).toHaveText("1");
+            await expect(productPage.removeBtn).toBeVisible();
+
+
+        })
     }
 
+    test('when logging out, user successfully logs out', async ({ page }) => {
+        const loginPage = new LoginPage(page);
+        const productPage = new ProductPage(page);
+
+        // Find the specific user from the JSON fixture
+        const standardUser = users.find(u => u.scenario === 'Standard User');
+        if (!standardUser) throw new Error("Standard User not found in fixture!");
+
+        await loginPage.navigate();
+        await loginPage.login(standardUser.username, standardUser.password);
+        await productPage.clickBurgerIcon();
+        await productPage.clickLogoutBtn();
+    });
 });
