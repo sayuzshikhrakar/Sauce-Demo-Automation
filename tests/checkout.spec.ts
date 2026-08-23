@@ -51,7 +51,7 @@ test.describe('SauceDemo Checkout Flow', () => {
         })
     }
 
-    test('when logging out, user successfully logs out', async ({ page }) => {
+    test('when logging out, user successfully logs out @regression', async ({ page }) => {
         const loginPage = new LoginPage(page);
         const productPage = new ProductPage(page);
 
