@@ -6,6 +6,7 @@ export class CheckoutPageYourInformation {
     readonly lastName: Locator;
     readonly zip: Locator;
     readonly continueBtn: Locator;
+    readonly invalidDataBtn: Locator;
 
 
     constructor(page: Page) {
@@ -14,6 +15,8 @@ export class CheckoutPageYourInformation {
         this.lastName = page.getByRole('textbox', { name: 'Last Name' });
         this.zip = page.getByRole('textbox', { name: 'Zip/Postal Code' });
         this.continueBtn = page.locator('[data-test="continue"]');
+        this.invalidDataBtn = page.locator('h3[data-test="error"]');
+
     }
 
     async fillYourInformation(firstName: string, lastName: string, Zip: string) {
@@ -30,5 +33,7 @@ export class CheckoutPageYourInformation {
     async assertOverviewPageNavigation() {
         await expect(this.page.getByText("Checkout: Overview")).toBeVisible();
     }
+
+
 
 }

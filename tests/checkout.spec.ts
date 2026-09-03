@@ -5,6 +5,7 @@ import { CheckoutPageOverview } from '../pages/CheckoutPageOverview';
 import { CheckoutPageYourInformation } from '../pages/CheckoutPageYourInformation';
 import users from '../fixtures/users.json';
 import { sortAlphabeticallyAsc, sortAlphabeticallyDesc } from "../utils/Helpers";
+import invalidCheckoutData from '../fixtures/invalidCheckoutData.json';
 
 test.describe('SauceDemo Checkout Flow', () => {
     // Data-driven testing: Iterate through the users fixture to run the checkout flow 
@@ -113,4 +114,41 @@ test.describe('SauceDemo Checkout Flow', () => {
 
 
     })
+
+    for (const invData of invalidCheckoutData) {
+        test(`Checkout with invalid data ${invData.scenario} @building`, async ({ page }) => {
+            const loginPage = new LoginPage(page);
+            const productPage = new ProductPage(page);
+            const checkoutPageYourInformation = new CheckoutPageYourInformation(page);
+
+            const standardUser = users.find(u => u.scenario === "Standard User");
+            if (!standardUser) throw new Error("Standard User not found in fixture!");
+
+            // Step 1: Login
+            await loginPage.navigate();
+            await loginPage.login(standardUser.username, standardUser.password);
+            await loginPage.assertSuccessfulLogin();
+
+
+            //add to cart
+            // Step 2: Add product to cart and navigate to checkout
+            await productPage.addToCart();
+            await productPage.clickShoppingCart();
+            await productPage.assertCartPageNavigation();
+            await productPage.clickCheckOutBtn();
+
+            //fill the invalid data
+            // Step 3: Fill in customer information
+            await checkoutPageYourInformation.fillYourInformation(invData.firstName, invData.lastName, invData.zipCode);
+            await checkoutPageYourInformation.clickContinue();
+            const errMessage = invData.expectedError;
+            console.log("errmessage", errMessage);
+
+
+            // Step 4: Complete the order
+            await expect(checkoutPageYourInformation.invalidDataBtn).toHaveText(errMessage);
+
+
+        })
+    }
 });

@@ -1,0 +1,23 @@
+[
+    {
+        "scenario": "Missing First Name",
+        "firstName": "",
+        "lastName": "Shikhrakar",
+        "zipCode": "NTY21",
+        "expectedError": "Error: First Name is required"
+    },
+    {
+        "scenario": "Missing Last Name",
+        "firstName": "Sayuz",
+        "lastName": "",
+        "zipCode": "NTY21",
+        "expectedError": "Error: Last Name is required"
+    },
+    {
+        "scenario": "Missing Postal Code",
+        "firstName": "Sayuz",
+        "lastName": "Shikhrakar",
+        "zipCode": "",
+        "expectedError": "Error: Postal Code is required"
+    }
+]

@@ -16,4 +16,7 @@ export class CheckoutPageOverview {
     async assertThankYouPageNavigation() {
         await expect(this.page.getByText("Thank you for your order!")).toBeVisible();
     }
+
+
+
 }
