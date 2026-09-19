@@ -18,9 +18,10 @@ All targets are public demo applications (`saucedemo.com`, `reqres.in`, `dummyjs
     *   **Playwright API Tests**: Full integration testing against `reqres.in` and `dummyjson.com`, including token extraction flows (login → extract token → authenticated context) and CRUD operations (GET/PUT/DELETE).
     *   **Postman/Newman Collection**: Designed for rapid regression and monitoring against `JSONPlaceholder`, managed as a distinct collection executable via CLI.
 *   **Performance/Load Testing**: Includes a functional `k6` load testing script to validate endpoint performance under concurrency and stress.
-*   **Continuous Integration (CI/CD)**: Contains two distinct GitHub Actions workflows:
+*   **Continuous Integration (CI/CD)**: Contains three distinct GitHub Actions workflows synced with npm scripts:
     *   Playwright Tests (UI & API) on `push`, `pull_request`, and schedule.
-    *   Newman/Postman API Regression suite on schedule/dispatch.
+    *   Newman/Postman API Regression suite on `push`, `pull_request`, and dispatch.
+    *   k6 Load Testing suite on a weekly schedule and dispatch.
 *   **Test Organization**: Utilizes tagging (`@regression`, `@building`) for intelligent suite execution.
 
 ## 📁 Repository Structure
@@ -70,22 +71,21 @@ Run tests in UI mode for debugging:
 npm run test:ui
 ```
 
-Run only Playwright API tests:
+Run both Playwright & Postman API tests sequentially:
 ```bash
 npm run test:api
 ```
 
 ### Postman/Newman (API Regression)
-To run the Postman API collection locally using Newman:
+To run *only* the Postman API collection locally and generate an HTML report:
 ```bash
-npm install -g newman newman-reporter-htmlextra
-newman run tests/api/JSONPLACEHOLDER.postman_collection.json -e tests/api/Environment.postman_environment.json -r cli,htmlextra
+npm run test:api:newman
 ```
 
 ### Load Testing (k6)
-Ensure [k6 is installed](https://k6.io/docs/get-started/installation/) on your machine.
+Ensure [k6 is installed](https://k6.io/docs/get-started/installation/) on your machine. Run the script and generate an HTML report in `load-test-reports/`:
 ```bash
-k6 run tests/load/api-load-test.js
+npm run test:load
 ```
 
 ## 👤 Author
