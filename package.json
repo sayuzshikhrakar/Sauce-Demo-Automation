@@ -1,11 +1,26 @@
 {
-  "name": "saucedemo",
+  "name": "saucedemo-automation",
   "version": "1.0.0",
-  "description": "",
+  "description": "Playwright end-to-end and API testing framework for SauceDemo, Reqres, and DummyJSON. Includes POM, data-driven tests, and CI/CD integration.",
   "main": "index.js",
-  "scripts": {},
-  "keywords": [],
-  "author": "",
+  "scripts": {
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:api:playwright": "playwright test tests/api",
+    "test:api:newman": "mkdir -p newman-report && npx newman run tests/api/JSONPLACEHOLDER.postman_collection.json -e tests/api/Environment.postman_environment.json -r cli,htmlextra --reporter-htmlextra-export newman-report/newman-report.html",
+    "test:api": "npm run test:api:playwright && npm run test:api:newman",
+    "test:load": "mkdir -p load-test-reports && k6 run tests/load/api-load-test.js"
+  },
+  "keywords": [
+    "playwright",
+    "automation",
+    "testing",
+    "e2e",
+    "api",
+    "pom",
+    "ci"
+  ],
+  "author": "Sayuz Shikhrakar",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
