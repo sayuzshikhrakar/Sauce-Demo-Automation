@@ -1,5 +1,7 @@
 import http from 'k6/http';
 import { check, sleep } from 'k6';
+import { htmlReport } from 'https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js';
+import { textSummary } from 'https://jslib.k6.io/k6-summary/0.0.1/index.js';
 
 // Performance testing configuration
 export const options = {
@@ -27,4 +29,12 @@ export default function () {
 
     // Pause for 1 second between iterations to simulate real user pacing
     sleep(1);
+}
+
+// Generate an HTML report and standard console output
+export function handleSummary(data) {
+    return {
+        "load-test-reports/k6-report.html": htmlReport(data),
+        stdout: textSummary(data, { indent: " ", enableColors: true }),
+    };
 }

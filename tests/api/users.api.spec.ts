@@ -26,7 +26,7 @@ test.describe('Reqres API Testing - Users', () => {
         //1. update payload
         const updatedPayload = {
             "name": "Sayuz Shikhrakar",
-            "role": "Senior SDET"
+            "role": "SDET"
         };
 
         //send put request
@@ -37,7 +37,7 @@ test.describe('Reqres API Testing - Users', () => {
         console.log('updated response', responseBody);
 
         expect(responseBody.name).toBe('Sayuz Shikhrakar');
-        expect(responseBody.role).toBe('Senior SDET');
+        expect(responseBody.role).toBe('SDET');
     });
 
     test('DELETE - Remove an existing user successfully', async ({ request }) => {
