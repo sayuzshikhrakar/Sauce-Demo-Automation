@@ -1,11 +1,11 @@
 import { test, expect } from '@playwright/test';
-import { LoginPage } from '../pages/LoginPage';
-import { ProductPage } from '../pages/ProductPage';
-import { CheckoutPageOverview } from '../pages/CheckoutPageOverview';
-import { CheckoutPageYourInformation } from '../pages/CheckoutPageYourInformation';
-import users from '../fixtures/users.json';
-import { sortAlphabeticallyAsc, sortAlphabeticallyDesc } from "../utils/Helpers";
-import invalidCheckoutData from '../fixtures/invalidCheckoutData.json';
+import { LoginPage } from '../../pages/LoginPage';
+import { ProductPage } from '../../pages/ProductPage';
+import { CheckoutPageOverview } from '../../pages/CheckoutPageOverview';
+import { CheckoutPageYourInformation } from '../../pages/CheckoutPageYourInformation';
+import users from '../../fixtures/users.json';
+import { sortAlphabeticallyAsc, sortAlphabeticallyDesc } from "../../utils/Helpers";
+import invalidCheckoutData from '../../fixtures/invalidCheckoutData.json';
 
 test.describe('SauceDemo Checkout Flow', () => {
     // Data-driven testing: Iterate through the users fixture to run the checkout flow 
