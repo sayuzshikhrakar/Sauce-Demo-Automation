@@ -21,7 +21,7 @@ test.describe('Reqres API Testing - Users', () => {
     });
 
     test('PUT - Update an existing user successfully', async ({ request }) => {
-        console.log('Sneing PUT request to update user...');
+        console.log('Sending PUT request to update user...');
 
         //1. update payload
         const updatedPayload = {
@@ -98,14 +98,7 @@ test.describe('Mock Authentication & Protected Routes @building', () => {
         })
     });
 
-    test.afterAll(async () => {      //setup authenticated context for subsequent tests
-        authContext = await playwrightRequest.newContext({
-            baseURL: 'https://dummyjson.com',
-            extraHTTPHeaders: {
-                Authorization: `Bearer ${token}`,
-
-            }
-        })
+    test.afterAll(async () => {
         await authContext?.dispose();
     });
 
@@ -118,7 +111,7 @@ test.describe('Mock Authentication & Protected Routes @building', () => {
         const body = await response.json();
     })
 
-    test('Fetch ons single product', async () => {
+    test('Fetch one single product', async () => {
         const response = await authContext.get('/products/1');
         expect(response.status()).toBe(200);
 
